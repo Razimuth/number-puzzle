@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import ttk
+from cells import CellObject, cell_clicked
 
 def display_board(board):
 #    root = tk.Tk()
@@ -9,28 +11,52 @@ def display_board(board):
  #   board.geometry('860x630')
 
     # Create column headers (A, B, C...)
-    for col_index in range(10):
-        header_text = chr(65 + col_index)  # Convert 0-9 to A-J
-        col_label = tk.Label(board, text=header_text, relief="solid", width=8, height=3)
-        col_label.grid(row=0, column=col_index + 1, padx=1, pady=1) # +1 for left-side row labels
+#    for col_index in range(10):
+#        header_text = chr(65 + col_index)  # Convert 0-9 to A-J
+#        col_label = tk.Label(board, text=header_text, relief="solid", width=8, height=3)
+#        col_label.grid(row=0, column=col_index + 1, padx=1, pady=1) # +1 for left-side row labels
 
     # Create row headers (1, 2, 3...)
-    for row_index in range(10):
-        row_label = tk.Label(board, text=str(row_index + 1), relief="solid", width=8, height=3)
-        row_label.grid(row=row_index + 1, column=0, padx=1, pady=1) # +1 for top-side column labels
+#    for row_index in range(10):
+#        row_label = tk.Label(board, text=str(row_index + 1), relief="solid", width=8, height=3)
+#        row_label.grid(row=row_index + 1, column=0, padx=1, pady=1) # +1 for top-side column labels
 
     # Create the 10x10 grid of cells
+#    cell_num = 1
+    buttons = []  # To store references to buttons
+    
     for row in range(10):
+        row_buttons = []
         for col in range(10):
-            cell_label = tk.Label(board, text=f"({row},{col})", relief="ridge", width=8, height=3)
-            cell_label.grid(row=row + 1, column=col + 1, padx=1, pady=1) # Offset by 1 for headers
+#            tk.Label(board, text=f"{cell_num}", relief="solid", borderwidth=2).grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
+        # Create a button for each cell
+            button = tk.Button(board, text=f"", width=5, bg="lightgray",
+                        command=lambda r=row, c=col: cell_clicked(r, c, buttons))
+            button.grid(row=row, column=col, padx=2, pady=2) # Place button in the grid
+            row_buttons.append(button)
+        buttons.append(row_buttons)
+          
+            
+
+
+#           tk.Button(board, text=f"({row},{col})",
+#                        command=lambda r=row, c=col: cell_clicked(r, c)).grid(row=row,
+#                        column=col, padx=2, pady=2) # Place button in the grid
+#            cell_label = ttk.Label(board, text=f"{cell_num}")
+#            cell_label = tk.Label(board, text=f"({row},{col})", relief="ridge", width=8, height=3)
+#            cell_label.grid(row=row, column=col, padx=20, pady=20) # Offset by 1 for headers
+ #           cell_label.grid(row=row + 1, column=col + 1, padx=1, pady=1) # Offset by 1 for headers
+#            cell1 = CellObject(board, 0, 0, " 1 ")
+#           cell_num += 1
+#    ttk.Separator(board, orient="horizontal").grid(row=0, column=0, columnspan=10, sticky="n")
+#    ttk.Separator(board, orient="vertical").grid(row=0, column=0, rowspan=10, sticky="e")
+
+    #cell1 = CellObject(board, 0, 0, " 1 ")
 
 #    root.mainloop()
-
+    return
 #if __name__ == "__main__":
 #    create_grid_with_labels()
-
-
 
 
 

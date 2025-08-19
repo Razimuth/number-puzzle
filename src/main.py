@@ -1,16 +1,25 @@
 import tkinter as tk
-#from tkinter import ttk
+from tkinter import ttk
 from graphics import display_board
+from cells import CellObject
+
+#Cell_Num = 1
 
 def main():
 
     root = tk.Tk()
     root.title("10x10 Number Puzzle")
     root.geometry('1000x800')
-    board = tk.Frame(root)
-    board.place(x=60, y=100, width=860, height=630)
+#    board = tk.Frame(root, bg="lightblue")
+    board = tk.Frame(root, borderwidth=5, relief=tk.RIDGE)
+    board.pack(padx=20, pady=20)
+    board.place(relx=.1, rely=.1)
+#    board.place(x=60, y=100, width=1000, height=700)
 
     display_board(board)
+
+    #cell1 = CellObject(board, 0, 0, " 1 ")
+
 
     root.mainloop()
 
