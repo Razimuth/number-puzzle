@@ -4,7 +4,7 @@ from tkinter import ttk
 
 Cell_Num = 0
 
-class Cell:
+class CellObject:
     def __init__(self, master, row, column, text_content):
         self.frame = ttk.Frame(master, borderwidth=1, relief="solid")
         self.label = ttk.Label(self.frame, text=text_content, width=8, height=3)

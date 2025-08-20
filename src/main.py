@@ -9,12 +9,15 @@ def main():
 
     root = tk.Tk()
     root.title("10x10 Number Puzzle")
-    root.geometry('1000x800')
+    #root.geometry('1000x800')
 #    board = tk.Frame(root, bg="lightblue")
-    board = tk.Frame(root, borderwidth=5, relief=tk.RIDGE)
-    board.pack(padx=20, pady=20)
-    board.place(relx=.1, rely=.1)
+    #board = tk.Frame(root, borderwidth=5, relief=tk.RIDGE)
+    #board.pack(padx=20, pady=20)
+    #board.place(relx=.1, rely=.1)
 #    board.place(x=60, y=100, width=1000, height=700)
+
+    board = tk.Frame(root)
+    board.pack(padx=10, pady=10)
 
     display_board(board)
 

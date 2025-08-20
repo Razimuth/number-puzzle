@@ -1,8 +1,24 @@
 import tkinter as tk
 from tkinter import ttk
 from cells import CellObject, cell_clicked
+from cells3 import CellObject
 
 def display_board(board):
+    cells = []
+    for row in range(10):
+        row_cells = []
+        for column in range(10):
+            current_cell = (0,0,0)
+            prev_cell = (0,0,0)
+            cell_data = ""
+#        cell_data = f"Value {r*10 + c}"
+            cell = CellObject(board, row, column, cell_data, prev_cell, current_cell)
+            row_cells.append(cell)
+        cells.append(row_cells)
+
+
+
+
 #    root = tk.Tk()
 #    root.title("10x10 Number Puzzle")
 #    root.geometry('1000x800')
@@ -23,6 +39,7 @@ def display_board(board):
 
     # Create the 10x10 grid of cells
 #    cell_num = 1
+"""
     buttons = []  # To store references to buttons
     
     for row in range(10):
@@ -36,7 +53,7 @@ def display_board(board):
             row_buttons.append(button)
         buttons.append(row_buttons)
           
-            
+"""            
 
 
 #           tk.Button(board, text=f"({row},{col})",
@@ -54,7 +71,7 @@ def display_board(board):
     #cell1 = CellObject(board, 0, 0, " 1 ")
 
 #    root.mainloop()
-    return
+#    return
 #if __name__ == "__main__":
 #    create_grid_with_labels()
 
