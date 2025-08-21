@@ -1,14 +1,15 @@
 import tkinter as tk
-from tkinter import ttk
-from graphics import display_board
-from cells import CellObject
-
-#Cell_Num = 1
-
+#from tkinter import ttk
+#from graphics import display_board
+#from cells import CellObject
+from cells4 import ButtonGrid
 def main():
 
     root = tk.Tk()
     root.title("10x10 Number Puzzle")
+    rows = 10
+    columns = 10
+
     #root.geometry('1000x800')
 #    board = tk.Frame(root, bg="lightblue")
     #board = tk.Frame(root, borderwidth=5, relief=tk.RIDGE)
@@ -16,13 +17,15 @@ def main():
     #board.place(relx=.1, rely=.1)
 #    board.place(x=60, y=100, width=1000, height=700)
 
-    board = tk.Frame(root)
-    board.pack(padx=10, pady=10)
+#    board = tk.Frame(root)
+#    board.pack(padx=10, pady=10)
 
-    display_board(board)
+#    display_board(board)
 
     #cell1 = CellObject(board, 0, 0, " 1 ")
 
+    # run ButtonGrid
+    ButtonGrid(root, rows, columns)
 
     root.mainloop()
 

@@ -1,72 +1,107 @@
 import tkinter as tk
 from tkinter import messagebox
 from config import FIRSTCLICK
-import time
 
-class CellObject:
-    def __init__(self, board, row, column, data, prev_cell, current_cell):
-        self.data = data
-        self.current_cell = current_cell
-        self.prev_cell = prev_cell
-#        self.widget = tk.Button(parent_frame, text=f"Cell ({row},{col})\nData: {data}")
-#        self.widget = tk.Button(frame, text=f"Cell ({row},{col})\nData: {data}", borderwidth=1,
-        self.widget = tk.Button(board, text=f"{self.data}", borderwidth=1, font=("Helvetica", 20, "bold"),
-#        self.widget = tk.Button(frame, text=(lambda data: data if data > 0 else command=hide_label), borderwidth=1,
-                           relief="solid", width=3, height=2, bg="lightgreen")
-#tk.Button(parent_frame, text=f"Cell ({row},{col})\nData: {data}")
-        self.widget.grid(row=row, column=column, padx=5, pady=5)
-        self.widget.bind("<Button-1>", self.on_click) # Bind left mouse click
+class ButtonGrid:
+    def __init__(self, root, number_rows, number_columns):
+        self.board = root
+#        self.root.title("Button Grid with Cell Data")
+        self.rows = number_rows
+        self.columns = number_columns
+        self.buttons = {}  # Dictionary to store buttons by (row, column)
+        self.data = {}     # Dictionary to store data associated with each cell
 
-#  need to set in grid setup ? maybe not
-#  add self.prev_cell = (0, 0, 0, "lightgray")   # as a tuple 
+        for r in range(self.rows):
+            for c in range(self.columns):
+                # Create a Button
+                button = tk.Button(self.board, text=f"", borderwidth=1, font=("Helvetica", 20, "bold"),
+                                   relief="solid", width=3, height=2, bg="lightgreen")
+                button.grid(row=r, column=c, padx=5, pady=5)
 
+#                button = tk.Button(self.root, text=f"Button ({r},{c})")
+#                button.grid(row=r, column=c, padx=5, pady=5)
+                # Store the button in the dictionary
+                self.buttons[(r, c)] = button
 
+                # Store some data for this cell (example: a tuple of coordinates)
+                # ( prev (row, col, num), current (row, col, num) )
+                self.data[(r, c)] = ((0,0,0),(0,0,0)) #(row, col)
 
-    def on_click(self, event):
-        clicked_widget = event.widget
-        grid_data = clicked_widget.grid_info()
-        current_bg_color = clicked_widget['bg']  # Or button.cget('bg')        
-        row = grid_data['row']
-        column = grid_data['column']
-        board = grid_data['in']
-#        old_new = 'old'
+                # Bind the button's click event to a callback function
+                button.config(command=lambda row=r, col=c: self.button_clicked(row, col))
+#        self.widget.bind("<Button-1>", self.on_click) # Bind left mouse click
 
+    def button_clicked(self, row, col):
+        # Access the data of the clicked button using row and column
+        cell_data = self.data[(row, col)]
+        cell_button = self.buttons[(row, col)]
+        cell_color = cell_button["bg"]
+
+#        print(f"Button at ({row},{col}) clicked! Data: {cell_data}")
+
+        # changes all cells to lightgray except clicked if is firstclick 
         global FIRSTCLICK
         if FIRSTCLICK is None:
-            FIRSTCLICK = clicked_widget
-            for row1 in range(10):
-                for column1 in range(10):
-                    if row == row1 and column == column1:
+            FIRSTCLICK = cell_button
+            for row1 in range(self.rows):
+                for column1 in range(self.columns):
+                    if row == row1 and col == column1:
                         # found clicked 
                         pass
                     else:
-                        widget = board.grid_slaves(row1, column1)[0]
+                        widget = self.board.grid_slaves(row1, column1)[0]
                         color = widget['bg']
                         if color == "lightgreen":
                          widget.config(bg="lightgray")
 
+            #  valid cell that is firstclick
+            cell_button.config(bg = "pink")
+            cell_data[0] = (row, col, 1) # set previous cell data
+            cell_data[1] = (row, col, 1) # set current cell data
+            cell_button.config(text = f"{cell_data[1][2]}")
+            ###change_cell_colors(self.board, row, col, False)
+
+                # need to do_old = false
 #            print(f"First button clicked: {FIRSTCLICK}")
+        
+        # if not firstclick
         else:
-            # if click on 1
-            if clicked_widget == FIRSTCLICK:
-                on_closing(board)
-           
-            
-            # if clicked again ask want to end?
-  #          print(f"Button already clicked, so = {FIRSTCLICK}")
+            # if click on 1  if clicked again ask want to end?
+            if cell_button == FIRSTCLICK:
+                on_closing(self.board)
+            else:
 
-        # valid next choice
-        if current_bg_color == "lightgreen":
-            if clicked_widget != FIRSTCLICK:
-                # go to prev cell
-                widget = board.grid_slaves(self.prev_cell[0], self.prev_cell[1])[0]
-                color = widget['bg']
-#                if color == "pink":
-                widget.config(bg="blue")
-                
-                print(widget)
-                time.sleep(10)  # Pause for 5 seconds                
+                # valid next choice
 
+
+
+
+                if cell_color == "green": # change to lightgreen
+ 
+ 
+###                    if cell_button == FIRSTCLICK:
+                    #  valid cell that is firstclick
+                        cell_button.config(bg = "pink")
+                        cell_data[(row,col)][0] = (row, col, 1) # set previous cell data
+                        cell_data[(row,col)][1] = (row, col, 1) # set current cell data
+                        cell_button.config(text = f"{cell_data[(row,col)][1][2]}")
+###                    else:
+                        # go to prev cell
+                        previous_cell_data = cell_data[(row,col)][0] # previous cell data
+                        widget = self.board.grid_slaves(previous_cell_data[0],previous_cell_data[1])[0]
+                        color = widget['bg']
+                        if color == "pink":
+                            widget.config(bg="lightblue")
+
+                # now change surrounding lightgreen to lightgray using previous cell
+
+
+
+
+###                        print(widget)
+                        #time.sleep(10)  # Pause for 5 seconds                
+                    
+             
 
 
             # find prev_cell (pink) = current_cell
@@ -74,7 +109,7 @@ class CellObject:
             # send to change_cell_colors(current_cell[0],current_cell[1], old_new)
 #                change_cell_colors(board, self.current_cell[0],self.current_cell[1], True)
             # change current cell to lightblue
-            else:
+###            else:
             # save prevcell = (self.current_cell[0],self.current_cell[1], self.data
             
             # currentcell = (row, column prevcell[2] +1)
@@ -83,7 +118,7 @@ class CellObject:
             # change all new choices
 #            change_cell_colors(board, self.current_cell[0],self.current_cell[1], False)
                 pass
-        elif current_bg_color == "pink":    
+###        elif current_bg_color == "pink":    
         # if firstclick button don't do
         
             # want to back up to prevcell
@@ -91,7 +126,7 @@ class CellObject:
             # change pink to lightgray
             # change prevcell bg == pink 
             # change do old == false on prevcell coords
-            pass
+###            pass
 
 
 #            clicked_widget.config(bg="pink")
@@ -103,28 +138,28 @@ class CellObject:
 #   now change new choices to lightgreen  if numb == 100 then win
 
 
-        if check_valid_choice(board, row, column):
+###        if check_valid_choice(board, row, column):
             # if lightgreen
             # else pink
-            pass
+###            pass
 
-        print(f"Clicked on cell at Row: {row}, Column: {column}")
+###        print(f"Clicked on cell at Row: {row}, Column: {column}")
         # You can now perform actions based on the clicked cell
 
-        print(f"Cell clicked! Data: {self.data}")
+###        print(f"Cell clicked! Data: {self.data}")
         # You can add more complex logic here based on the cell's data
 
-        print(f"button bg  {current_bg_color}")
+###        print(f"button bg  {current_bg_color}")
 
-        if current_bg_color == "lightgray":
+###        if current_bg_color == "lightgray":
 #            clicked_widget.config(bg="yellow")
-            clicked_widget.config(bg="lightgreen")
+###            clicked_widget.config(bg="lightgreen")
 
         
-        if current_bg_color == "yellow" and self.data == "":
-            clicked_widget.config(text=f"{self.prev_cell[2]+1}")
+###        if current_bg_color == "yellow" and self.data == "":
+###            clicked_widget.config(text=f"{self.prev_cell[2]+1}")
     # prev_cell will be set elsewhere, just here to test
-            self.prev_cell = (row, column, 2,"red")
+###            self.prev_cell = (row, column, 2,"red")
 
 # when click 
 # 1 check if bg= lightgreen or pink
@@ -138,12 +173,34 @@ class CellObject:
 # row col+3, row+3 col, row col-3, row-3 col, row+2 col+2, row+2 col-2, row-2 col-2, row-2 col+2
 # good if lightgreen or pink, not good if lightgray or lightblue or row < 0 or row > 9 or col < 0 col > 9     
 
+
+
+#        cell_button.config(bg="pink")
+#        widget = self.board.grid_slaves(row+1, col+1)[0]
+#        color = widget['bg']
+##                if color == "pink":
+#        widget.config(bg="blue")
+                
+#                print(widget)
+#                time.sleep(10)  # Pause for 5 seconds                
+
+
+# Create the main window and run the application
+#root = tk.Tk()
+#app = ButtonGrid(root)
+#root.mainloop()
 def on_closing(board):
     if messagebox.askyesno("Quit", "Do you really want to close the application?"):
         board.destroy()
         exit(0)
 
+###def set_previous_cell_data
+###def get_previous_cell_data
 
+
+
+# changes cell colrs for rule based picks  
+# do_old == true (cells = lightgray), false (cells = lightgreen)
 def change_cell_colors(board, row, column, do_old):
 
     print("1")
@@ -211,60 +268,3 @@ def change_cell_colors_helper(board, row, column, do_old):
         elif not do_old and color == "lightgray":
             widget.config(bg="lightgreen")
         print(widget)
-
-
-def check_valid_choice(board, row, column):
-# row col+3, row+3 col, row col-3, row-3 col, row+2 col+2, row+2 col-2, row-2 col-2, row-2 col+2
-    
-    widget_at_1_0 = board.grid_slaves(row, column)[0]
-
-    color = widget_at_1_0['bg']
-    print(f"color =  {color}")
-
-    widget_at_1_0.config(text=f"{100}")    
-    return True
-
-
-def find_prev_cell():
-    # go through all rule allowed placements, if bg= red return status tuple to set as prev_cell
-    # value
-
-    pass
-
-def change_cell_choices():
-    # go through all rule allowe cells to either set to yellow for choices
-    # or set yellow back to lightgray if choice not selected
-    # or if red for prev cell then change to lightblue if value not ""
-    # or if "" then change to lightgray 
-    pass
-
-def check_cell_status(row,col):
-    return (row, col, value, bg)
-
-
-
-# Example of modifying a cell's data and updating its display
-#cell_data[(0, 0)].set_value("Updated!")
-#cell_widgets[(0, 0)].config(text=cell_data[(0, 0)].get_value())
-
-
-#root = tk.Tk()
-#root.title("10x10 Number Puzzle")
-
-#grid_frame = tk.Frame(root)
-#grid_frame.pack(padx=10, pady=10)
-
-"""
-cells = []
-for r in range(10):
-    row_cells = []
-    for c in range(10):
-        prev_cell = (0,0,0,"lightgray")
-        cell_data = ""
-#        cell_data = f"Value {r*10 + c}"
-        cell = CellObject(grid_frame, r, c, cell_data, prev_cell)
-        row_cells.append(cell)
-    cells.append(row_cells)
-
-"""
-#root.mainloop()
