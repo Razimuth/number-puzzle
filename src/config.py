@@ -1,1 +1,0 @@
-FIRSTCLICK = None
